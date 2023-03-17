@@ -1,6 +1,6 @@
 import Head from 'next/head'
 import Image from 'next/image'
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 export default function Home() {
   const [inputValue, setInputValue] = useState("");
@@ -20,8 +20,16 @@ export default function Home() {
   return pattern.test(input);
   }
 
-  const handleSubmit = async (e) => {
+  useEffect(() => {
+    const clearSpinner = () => {
+      if (pdfLink) {
+        isSubmitting(false);
+      } 
+    }
+    clearSpinner();
+  }, [pdfLink] )
 
+  const handleSubmit = async (e) => {
     isSubmitting(true);
     e.preventDefault();
 
@@ -38,10 +46,6 @@ export default function Home() {
 
     setPdfLink(url);
     setInputValue("");
-    
-    if (pdfLink) {
-      isSubmitting(false);
-    }
   };
 
   const handleDownload = () => {
@@ -69,7 +73,7 @@ export default function Home() {
         {
               submit ? <Spinner/> : <button
               type="submit"
-              className="bg-blue-500 mt-3 hover:bg-blue-700 text-white font-bold py-2 md:ml-3 px-4 rounded"
+              className="bg-blue-500 mt-3 hover:bg-blue-600 text-white font-bold py-2 md:ml-3 px-4 rounded"
             >
               Submit
             </button>
