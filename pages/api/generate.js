@@ -1,11 +1,18 @@
-import puppeteer from "puppeteer";
+import chromium from 'chrome-aws-lambda';
 
 export default async function handler(req, res) {
   try {
     const { inputValue } = req.body;
 
     if (inputValue) {
-      const browser = await puppeteer.launch({ headless: true });
+      
+      const browser = await chromium.puppeteer.launch({
+          args: [...chromium.args, "--hide-scrollbars", "--disable-web-security"],
+          defaultViewport: chromium.defaultViewport,
+          executablePath: await chromium.executablePath,
+          headless: true,
+          ignoreHTTPSErrors: true,
+        })
       const page = await browser.newPage();
       await page.goto(inputValue, { waitUntil: "networkidle2" });
 
